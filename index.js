@@ -5,8 +5,9 @@
 
 var fs = require('fs');
 var path = require('path');
-var aws = require('aws-sdk');
-var moment = require('moment');
+var aws = require(process.env.GHOST_CONTENT_MODULES + '/aws-sdk/index.js');
+var moment = require(process.env.GHOST_CONTENT_MODULES + '/moment/moment.js');
+
 var options = {};
 var _s3Client = null;
 
