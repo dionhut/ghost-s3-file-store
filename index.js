@@ -5,43 +5,55 @@
 
 var fs = require('fs');
 var path = require('path');
-var aws = require(process.env.GHOST_CONTENT_MODULES + '/aws-sdk/index.js');
-var moment = require(process.env.GHOST_CONTENT_MODULES + '/moment/moment.js');
+var util = require('util');
+var aws = require('aws-sdk');
+var moment = require('moment');
+var http = require('http');
+var Promise = require('bluebird');
+if(!process.env.GHOST_SOURCE) {
+    var BaseStore = require('./base');
+} else {
+    var BaseStore = require(path.join(process.env.GHOST_SOURCE, 'core/server/storage/base'));
+}
 
 var options = {};
 var _s3Client = null;
 
 function S3Store(config, s3Client) {
+    BaseStore.call(this);
+
     options = config || {};
 
     // Injected s3Client for testability
-    _s3Client = s3Client;
+    _s3Client = s3Client ? s3Client : new aws.S3();
+
+    console.log('S3Store initialized - ', JSON.stringify(options));
 }
+
+util.inherits(S3Store, BaseStore);
 
 S3Store.prototype.save = function(image) {
     return new Promise(function(resolve, reject) {
-        if(!options || !options.bucketName || options.bucketName.length == 0)
+        if(!options || !options.bucket || options.bucket.length == 0)
         {
             reject('Invalid s3-file-store config');
+            return;
         }
 
-        // New up s3 Client if not already injected
-        var s3 = _s3Client ? _s3Client : new aws.S3();
-
-        var stream = fs.createReadStream(image.path, { autoClose: true});
+        var stream = fs.createReadStream(image.path, { autoClose: true });
 
         var targetFolder = path.join(options.folder, moment().format('YYYY/MM/DD/'));
         var formattedFilename = path.parse(image.path);
         var targetFilename = formattedFilename.name + formattedFilename.ext;
         var targetKey = path.join(targetFolder, targetFilename);
 
-        console.log("s3-file-store putObject", image.path, options.bucketName, targetKey);
+        console.log("s3-file-store putObject", image.path, options.bucket, targetKey);
 
-        s3.putObject({ Bucket: options.bucketName, Key: targetKey, Body: stream }, function(error, data) {
+        _s3Client.putObject({ Bucket: options.bucket, Key: targetKey, Body: stream }, function(error, data) {
             if(error) {
                 reject(error);
             } else {
-                resolve('http://' + options.bucketName + '.s3.amazonaws.com/' + targetKey);
+                resolve('http://' + options.bucket + '.s3.amazonaws.com/' + targetKey);
             }
         });
     });
@@ -51,6 +63,26 @@ S3Store.prototype.serve = function serve(options) {
     return function(req, res, next) {
         next();
     }
+};
+
+S3Store.prototype.exists = function exists(filename) {
+    return new Promise(function (resolve, reject) {
+        http.get(filename, function(res) {
+            resolve(res.statusCode == 200);
+        });
+    });
+};
+
+S3Store.prototype.delete = function deleteFile(fileName, targetDir) {
+    return new Promise(function(resolve) {
+        reject('Not supported');
+    });
+};
+
+S3Store.prototype.read = function read(options) {
+    return new Promise(function(resolve) {
+        reject('Not supported');
+    });
 };
 
 module.exports = S3Store;

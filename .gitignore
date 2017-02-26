@@ -62,3 +62,7 @@ typings/
 
 .DS_Store
 .idea
+/test-data/
+.npmignore
+base.js
+/node_modules/

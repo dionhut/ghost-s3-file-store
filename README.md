@@ -1,1 +1,9 @@
-# ghost-s3-file-store
+# Ghost S3 File Storage Plug-in
+
+```
+{
+    bucketName: <bucket>,
+    folder: <root-folder>
+}
+```
+

@@ -24,7 +24,8 @@
   "homepage": "https://github.com/INRIX-dion-hutchings/ghost-s3-file-store#readme",
   "dependencies": {
     "aws-sdk": "^2.20.0",
-    "guid": "0.0.12",
+    "bluebird": "^3.4.7",
+    "lodash": "^4.17.4",
     "moment": "^2.17.1",
     "nodeunit-mock": "0.0.5"
   }
