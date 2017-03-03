@@ -95,6 +95,7 @@ Add this json to your Ghost config.json file.
 storage: {
     active: 'ghost-s3-file-storage',
     'ghost-s3-file-storage': {
+        region: 'us-west-2',
         bucket: '<bucket>',
         folder: '<root-folder>'
     }
