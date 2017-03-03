@@ -22,9 +22,9 @@ exports.testS3StoreFileFolderWOutEndSlash = function (test) {
 
     fs.writeFileSync('test-data/test1.jpg', "1111");
 
-    var s3FileStorage = new S3Store({bucket: "blog.dionhut.net", folder: "test"}, s3);
+    var s3FileStorage = new S3Store({region:'us-west-2', bucket: "blog.dionhut.net", folder: "test"}, s3);
     s3FileStorage.save({path: 'test-data/test1.jpg'}).then(function (url) {
-        test.equal("http://blog.dionhut.net.s3.amazonaws.com/" + path.join("test", moment().format("YYYY/MM/DD"), "test1.jpg"), url);
+        test.equal("https://s3-us-west-2.amazonaws.com/blog.dionhut.net/" + path.join("test", moment().format("YYYY/MM/DD"), "test1.jpg"), url);
         test.done();
     });
 };
@@ -39,6 +39,29 @@ exports.testNullOptions = function (test) {
         test.done();
     });
 };
+
+exports.testNullRegion = function (test) {
+    var s3FileStorage = new S3Store({bucket: "blog.dionhut.net"});
+    s3FileStorage.save({path: 'test-data/IMG_0753.jpg'}).then(function (url) {
+        test.ok(false);
+        test.done();
+    }, function (err) {
+        test.ok(true);
+        test.done();
+    });
+}
+
+exports.testZeroLenRegion = function (test) {
+    var s3FileStorage = new S3Store({bucket: "blog.dionhut.net", region:''});
+    s3FileStorage.save({path: 'test-data/IMG_0753.jpg'}).then(function (url) {
+        test.ok(false);
+        test.done();
+    }, function (err) {
+        test.ok(true);
+        test.done();
+    });
+};
+
 
 exports.testNullBucket = function (test) {
     var s3FileStorage = new S3Store({});
@@ -77,8 +100,8 @@ exports.testRequiredFns = function (test) {
 };
 
 exports.testExists = function(test) {
-    var s3FileStorage = new S3Store({bucket: "blog.dionhut.net", folder: "test"});
-    s3FileStorage.exists('http://blog.dionhut.net.s3.amazonaws.com/test/IMG_0753.jpg').then(function(exists) {
+    var s3FileStorage = new S3Store({region:'us-west-2', bucket: "blog.dionhut.net", folder: "test"});
+    s3FileStorage.exists('https://s3-us-west-2.amazonaws.com/blog.dionhut.net/test/IMG_0753.jpg').then(function(exists) {
         test.ok(exists);
         test.done();
     }, function(err) {
@@ -89,8 +112,8 @@ exports.testExists = function(test) {
 };
 
 exports.testNotExists = function(test) {
-    var s3FileStorage = new S3Store({bucket: "blog.dionhut.net", folder: "test"});
-    s3FileStorage.exists('http://blog.dionhut.net.s3.amazonaws.com/test/IMG_0753__.jpg').then(function(exists) {
+    var s3FileStorage = new S3Store({region:'us-west-2', bucket: "blog.dionhut.net", folder: "test"});
+    s3FileStorage.exists('https://s3-us-west-2.amazonaws.com/blog.dionhut.net/test/IMG_0753__.jpg').then(function(exists) {
         test.ok(!exists);
         test.done();
     }, function(err) {

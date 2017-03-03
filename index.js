@@ -8,7 +8,7 @@ var path = require('path');
 var util = require('util');
 var aws = require('aws-sdk');
 var moment = require('moment');
-var http = require('http');
+var https = require('https');
 var Promise = require('bluebird');
 if(!process.env.GHOST_SOURCE) {
     var BaseStore = require('./base');
@@ -34,7 +34,7 @@ util.inherits(S3Store, BaseStore);
 
 S3Store.prototype.save = function(image) {
     return new Promise(function(resolve, reject) {
-        if(!options || !options.bucket || options.bucket.length == 0)
+        if(!options || !options.bucket || options.bucket.length == 0 || !options.region || options.region.length == 0)
         {
             reject('Invalid s3-file-store config');
             return;
@@ -53,7 +53,7 @@ S3Store.prototype.save = function(image) {
             if(error) {
                 reject(error);
             } else {
-                resolve('http://' + options.bucket + '.s3.amazonaws.com/' + targetKey);
+                resolve(util.format('https://s3-%s.amazonaws.com/%s/%s', options.region, options.bucket, targetKey));
             }
         });
     });
@@ -67,7 +67,7 @@ S3Store.prototype.serve = function serve(options) {
 
 S3Store.prototype.exists = function exists(filename) {
     return new Promise(function (resolve, reject) {
-        http.get(filename, function(res) {
+        https.get(filename, function(res) {
             resolve(res.statusCode == 200);
         });
     });

@@ -31,9 +31,9 @@ module.exports = {
     },
 
     testS3StoreFile: function (test) {
-        var s3FileStorage = new S3Store({bucket: "blog.dionhut.net", folder: "test/"});
+        var s3FileStorage = new S3Store({region: "us-west-2", bucket: "blog.dionhut.net", folder: "test/"});
         s3FileStorage.save({path: 'test-data/test.jpg'}).then(function (url) {
-            test.equal("http://blog.dionhut.net.s3.amazonaws.com/" + path.join("test", moment().format("YYYY/MM/DD"), "test.jpg"), url);
+            test.equal("https://s3-us-west-2.amazonaws.com/blog.dionhut.net/" + path.join("test", moment().format("YYYY/MM/DD"), "test.jpg"), url);
             test.done();
         }, function (err) {
             console.log(err);
