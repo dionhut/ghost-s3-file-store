@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "nodeunit"
+    "test": "nodeunit test/index-test.js"
   },
   "repository": {
     "type": "git",
