@@ -1,4 +1,12 @@
 language: node_js
 node_js:
-  - "iojs"
-  - "6"
+- iojs
+- '6'
+deploy:
+  provider: npm
+  email: dionhut@outlook.com
+  api_key:
+    secure: F1AlaQp0xiEIwZ/rYvfCCtxC4NjcybPSF2Yt7BN6gVpHvxNWYjOQzFO2UlTqRoaJi9nm4aIjNNgF7OP9LXgPKOsuGp/ypgth2bUNl79SnFUrTHY/asIaSSkXCtHZxZAf95AK5FcP7LLng9eKH747FaWZT+pskacSSfAd+BBzoapgNKazON7HBkzywpldie+KRoPsRjL+DW0duozMY1jebkpN6Gg8NZSo+SPQVvRdO0VhyfhxQWtVVhgbeFw3V2QYULfiK4UtqY+B8Ys+Iab44fbjel5CsqW57ksI1/cVzB6DlHHEnVzNwesX25wCOM2TLFRsXNi8Xhi+YwVcjBy69zYlOLKjgWjvS8miOO2541eOwraC20mTDGyGHHnffy5MXCyVbsqZPKE1M7TJil0OlG8C27GKTDzuizx0GSndUcQh+evoVgWTwwUn8DwOq/LhSekrS3d8nKtjFjfTXy+IPWqSFPrdxLaOot6HKgh6szG1KJYXHGATIaLC3ILWoGq7FxNnC65TUFyNN2qGznKcnep7MouISrQoLgb2GaA1VwOJv/7Bgb6nJhuq2FJv9nhUn1qgB03EJprf+BPY5/xe3USqZnIHB46igYgv/bZDpAodqRdFz4AsDnEdx5Yxj9xb3pf9u9QH+aUE6tyEvqoMYIN6TsF7iEdajsfX5MIzU0o=
+  on:
+    tags: true
+    repo: dionhut/ghost-s3-file-store

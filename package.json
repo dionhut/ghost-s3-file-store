@@ -1,6 +1,6 @@
 {
-  "name": "ghost-s3-file-store",
-  "version": "1.1.0",
+  "name": "ghost-s3-file-storage",
+  "version": "1.1.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/INRIX-dion-hutchings/ghost-s3-file-store.git"
+    "url": "git+https://dionhut/ghost-s3-file-store.git"
   },
   "keywords": [
     "ghost",
@@ -19,14 +19,17 @@
   "author": "dionhut@outlook.com",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/INRIX-dion-hutchings/ghost-s3-file-store/issues"
+    "url": "https://github.com/dionhut/ghost-s3-file-store/issues"
   },
-  "homepage": "https://github.com/INRIX-dion-hutchings/ghost-s3-file-store#readme",
+  "homepage": "https://github.com/dionhut/ghost-s3-file-store#readme",
   "dependencies": {
     "aws-sdk": "^2.20.0",
     "bluebird": "^3.4.7",
     "lodash": "^4.17.4",
-    "moment": "^2.17.1",
+    "moment": "^2.17.1"
+  },
+  "devDependencies": {
+    "nodeunit": "^0.11.0",
     "nodeunit-mock": "0.0.5"
   }
 }
