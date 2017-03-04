@@ -1,6 +1,8 @@
 # Ghost S3 File Storage Plug-in
 
-Ghost 0.11.5+
+Ghost v0.11.5+
+
+[![Build Status](https://travis-ci.org/dionhut/ghost-s3-file-store.svg?branch=master)](https://travis-ci.org/dionhut/ghost-s3-file-store)
 
 Once installed allows a ghost user to upload files directly to AWS S3 from
 the Ghost editor without any changes to ghost source.
