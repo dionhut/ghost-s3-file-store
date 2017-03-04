@@ -66,3 +66,4 @@ typings/
 .npmignore
 base.js
 /node_modules/
+!/base.js

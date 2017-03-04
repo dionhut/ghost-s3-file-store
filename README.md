@@ -1,9 +1,9 @@
 # Ghost S3 File Storage Plug-in
 
-Ghost 0.11.5
+Ghost 0.11.5+
 
 Once installed allows a ghost user to upload files directly to AWS S3 from
-the Ghost editor.
+the Ghost editor without any changes to ghost source.
 This is especially useful when deploying Ghost in AWS directly
 on EC2 instances or Docker Containers where storing 
 files to local disk isn't desirable when multiple instances of
@@ -21,21 +21,15 @@ using `--volumes-from`
 First we need to create our data volume container.  But before we do that let's clone the
 ghost-s3-file-store repo.
 
-```
-git clone https://github.com/INRIX-dion-hutchings/ghost-s3-file-store.git
-```
-
-Now Create a new directory for your ghost blog data volume container.
+Create a new directory for your ghost blog data volume container.
 
 ```
 mkdir ghost-blog-data
 cd ghost-blog-data
 
 npm init
-npm install --save ../ghost-s3-file-store
+npm install --save ghost-s3-file-storage
 ```
-
-TODO: I know, I know. Get around to publishing to npm.
 
 Next we can create a Dockerfile that looks a lot like below.
 
