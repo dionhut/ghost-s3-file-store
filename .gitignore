@@ -67,3 +67,5 @@ typings/
 base.js
 /node_modules/
 !/base.js
+/test.jpg
+/test1.jpg

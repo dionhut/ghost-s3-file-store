@@ -8,7 +8,7 @@ var fs = require('fs');
 
 module.exports = {
     setUp: function (callback) {
-        var writeStream = fs.createWriteStream('test-data/test.jpg', { autoClose: true });
+        var writeStream = fs.createWriteStream('test.jpg', { autoClose: true });
         var s3 = new aws.S3();
         var readStream = s3.getObject({ Bucket: "blog.dionhut.net", Key: "test/IMG_0753.jpg" }).createReadStream();
         readStream.pipe(writeStream);
@@ -32,7 +32,7 @@ module.exports = {
 
     testS3StoreFile: function (test) {
         var s3FileStorage = new S3Store({region: "us-west-2", bucket: "blog.dionhut.net", folder: "test/"});
-        s3FileStorage.save({path: 'test-data/test.jpg'}).then(function (url) {
+        s3FileStorage.save({path: 'test.jpg'}).then(function (url) {
             test.equal("https://s3-us-west-2.amazonaws.com/blog.dionhut.net/" + path.join("test", moment().format("YYYY/MM/DD"), "test.jpg"), url);
             test.done();
         }, function (err) {

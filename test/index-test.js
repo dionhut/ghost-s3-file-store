@@ -20,10 +20,10 @@ exports.testS3StoreFileFolderWOutEndSlash = function (test) {
         callback(null, {});
     });
 
-    fs.writeFileSync('test-data/test1.jpg', "1111");
+    fs.writeFileSync('test1.jpg', "1111");
 
     var s3FileStorage = new S3Store({region:'us-west-2', bucket: "blog.dionhut.net", folder: "test"}, s3);
-    s3FileStorage.save({path: 'test-data/test1.jpg'}).then(function (url) {
+    s3FileStorage.save({path: 'test1.jpg'}).then(function (url) {
         test.equal("https://s3-us-west-2.amazonaws.com/blog.dionhut.net/" + path.join("test", moment().format("YYYY/MM/DD"), "test1.jpg"), url);
         test.done();
     });
@@ -31,7 +31,7 @@ exports.testS3StoreFileFolderWOutEndSlash = function (test) {
 
 exports.testNullOptions = function (test) {
     var s3FileStorage = new S3Store();
-    s3FileStorage.save({path: 'test-data/IMG_0753.jpg'}).then(function (url) {
+    s3FileStorage.save({path: 'IMG_0753.jpg'}).then(function (url) {
         test.ok(false);
         test.done();
     }, function (err) {
@@ -42,7 +42,7 @@ exports.testNullOptions = function (test) {
 
 exports.testNullRegion = function (test) {
     var s3FileStorage = new S3Store({bucket: "blog.dionhut.net"});
-    s3FileStorage.save({path: 'test-data/IMG_0753.jpg'}).then(function (url) {
+    s3FileStorage.save({path: 'IMG_0753.jpg'}).then(function (url) {
         test.ok(false);
         test.done();
     }, function (err) {
@@ -53,7 +53,7 @@ exports.testNullRegion = function (test) {
 
 exports.testZeroLenRegion = function (test) {
     var s3FileStorage = new S3Store({bucket: "blog.dionhut.net", region:''});
-    s3FileStorage.save({path: 'test-data/IMG_0753.jpg'}).then(function (url) {
+    s3FileStorage.save({path: 'IMG_0753.jpg'}).then(function (url) {
         test.ok(false);
         test.done();
     }, function (err) {
@@ -65,7 +65,7 @@ exports.testZeroLenRegion = function (test) {
 
 exports.testNullBucket = function (test) {
     var s3FileStorage = new S3Store({});
-    s3FileStorage.save({path: 'test-data/IMG_0753.jpg'}).then(function (url) {
+    s3FileStorage.save({path: 'IMG_0753.jpg'}).then(function (url) {
         test.ok(false);
         test.done();
     }, function (err) {
@@ -76,7 +76,7 @@ exports.testNullBucket = function (test) {
 
 exports.testZeroLenBucket = function (test) {
     var s3FileStorage = new S3Store({bucket: ''});
-    s3FileStorage.save({path: 'test-data/IMG_0753.jpg'}).then(function (url) {
+    s3FileStorage.save({path: 'IMG_0753.jpg'}).then(function (url) {
         test.ok(false);
         test.done();
     }, function (err) {
