@@ -93,10 +93,35 @@ storage: {
     'ghost-s3-file-storage': {
         region: 'us-west-2',
         bucket: '<bucket>',
-        folder: '<root-folder>'
+        folder: '<root-folder>',
+        distributionUrl: 'https://abc.cloudfront.net'
     }
 }
 ```
+
+##### active
+Refers to the $GHOST_CONTENT/storage/ghost-s3-file-storage directory where Ghost can find
+this file storage plug-in.
+
+##### region
+(Optional) The AWS availability zone the S3 bucket was created in
+
+##### bucket
+The S3 bucket name
+
+##### folder
+The root folder to upload files into in the specified bucket
+
+##### distributionUrl
+(Optional) The base url to construct when returning url to Ghost if standing up a CloudFront
+CDN in front of the S3 bucket.
+Eg. `<distribution-url>`/`<folder>`/`<YYYY>`/`<MM>`/`<DD>`/`<guid>`.`<ext>`
+See [here](http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/MigrateS3ToCloudFront.html#adding-cloudfront-to-s3)
+for details on how to set up CloudFront to cache files out on the edges.
+
+If distributionUrl is not specified then defaults to S3 http url in which case region must be specified.
+Eg. https://s3-`<region>`.amazonaws.com/`<bucket>`/`<folder>`/`<YYYY>`/`<MM>`/`<DD>`/`<guid>`.`<ext>`
+If both region and distributionUrl are specified distributionUrl takes precedence.
 
 ###Feedback
 Feedback and contributions welcome

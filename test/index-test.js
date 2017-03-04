@@ -29,6 +29,25 @@ exports.testS3StoreFileFolderWOutEndSlash = function (test) {
     });
 };
 
+exports.testS3StoreFileDistUrl = function (test) {
+    test.expect(3);
+    var s3 = new aws.S3();
+    mock(test, s3, "putObject", function (request, callback) {
+        test.equal("blog.dionhut.net", request.Bucket);
+        test.equal(path.join("test", moment().format("YYYY/MM/DD"), "test1.jpg"), request.Key);
+        callback(null, {});
+    });
+
+    fs.writeFileSync('test1.jpg', "1111");
+
+    // region will be overridden
+    var s3FileStorage = new S3Store({region:'us-west-2', bucket: "blog.dionhut.net", folder: "test", distributionUrl: 'https://xyz.cloudfront.net'}, s3);
+    s3FileStorage.save({path: 'test1.jpg'}).then(function (url) {
+        test.equal("https://xyz.cloudfront.net/" + path.join("test", moment().format("YYYY/MM/DD"), "test1.jpg"), url);
+        test.done();
+    });
+};
+
 exports.testNullOptions = function (test) {
     var s3FileStorage = new S3Store();
     s3FileStorage.save({path: 'IMG_0753.jpg'}).then(function (url) {
@@ -40,7 +59,7 @@ exports.testNullOptions = function (test) {
     });
 };
 
-exports.testNullRegion = function (test) {
+exports.testNullRegionAndUrl = function (test) {
     var s3FileStorage = new S3Store({bucket: "blog.dionhut.net"});
     s3FileStorage.save({path: 'IMG_0753.jpg'}).then(function (url) {
         test.ok(false);
@@ -61,7 +80,6 @@ exports.testZeroLenRegion = function (test) {
         test.done();
     });
 };
-
 
 exports.testNullBucket = function (test) {
     var s3FileStorage = new S3Store({});

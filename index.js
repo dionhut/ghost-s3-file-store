@@ -34,9 +34,14 @@ util.inherits(S3Store, BaseStore);
 
 S3Store.prototype.save = function(image) {
     return new Promise(function(resolve, reject) {
-        if(!options || !options.bucket || options.bucket.length == 0 || !options.region || options.region.length == 0)
+        if(!options || _.isEmpty(options.bucket))
         {
-            reject('Invalid s3-file-store config');
+            reject('Invalid s3-file-store config - Bucket is required');
+            return;
+        }
+        if(_.isEmpty(options.region) && _.isEmpty(options.distributionUrl))
+        {
+            reject('Invalid s3-file-store config - Must specify either region or distributionUrl');
             return;
         }
 
@@ -53,7 +58,11 @@ S3Store.prototype.save = function(image) {
             if(error) {
                 reject(error);
             } else {
-                resolve(util.format('https://s3-%s.amazonaws.com/%s/%s', options.region, options.bucket, targetKey));
+                if(_.isEmpty(options.distributionUrl)) {
+                    resolve(util.format('https://s3-%s.amazonaws.com/%s/%s', options.region, options.bucket, targetKey));
+                } else {
+                    resolve(util.format('%s/%s', options.distributionUrl, targetKey));
+                }
             }
         });
     });
