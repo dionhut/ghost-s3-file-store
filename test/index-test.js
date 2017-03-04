@@ -9,7 +9,7 @@ var path = require('path');
 var fs = require('fs');
 var BaseStore = require('../base');
 var util = require('util');
-_ = require('lodash'),
+var _ = require('lodash');
 
 exports.testS3StoreFileFolderWOutEndSlash = function (test) {
     test.expect(3);

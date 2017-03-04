@@ -10,6 +10,8 @@ var aws = require('aws-sdk');
 var moment = require('moment');
 var https = require('https');
 var Promise = require('bluebird');
+var _ = require('lodash');
+
 if(!process.env.GHOST_SOURCE) {
     var BaseStore = require('./base');
 } else {
