@@ -17,7 +17,7 @@ This S3 storage adapter doesn't perform reading or serving the files and require
 I like to deploy Ghost in a Docker container using the official [Ghost](https://hub.docker.com/_/ghost/)
 image.
 
-I created an npm project with a Dockerfile and installed ghost-s3-file-storage as a dependency.  This way when the container is build we can include the index.js and it's node_modules.
+I created an npm project with a Dockerfile and installed ghost-s3-file-storage as a dependency.  This way when the container is built we can include the index.js and it's node_modules.
 
 ```
 npm init
@@ -34,7 +34,7 @@ ADD node_modules/ghost-s3-file-storage/node_modules /var/lib/ghost/content/adapt
 ADD node_modules/ghost-s3-file-storage/index.js /var/lib/ghost/content/adapters/storage/ghost-s3-file-storage/index.js
 ```
 
-Now we can build our Docker image and create a container.
+Now we can build our Docker image.
 
 ```
 docker build --rm -t ghost-blog:latest .
@@ -50,14 +50,12 @@ docker run --rm -p 2368:2368 -e NODE_ENV=development -e database__client=sqlite3
     -e AWS_SECRET_ACCESS_KEY=<secret> ghost-blog:latest
 ```
 
-Note: Never store AWS credentials in source or configuration files or transmit them in any way.  Best practice is to never set the AWS credentials in code via the aws-sdk client.  Instead utilize the default behavior of AWS sdk clients, credential provider chain which searches for credentials using chain of responsibility pattern searching for environment variables or IAM role (within AWS data center) and so on.  See http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CredentialProviderChain.html
+Note: Never store AWS credentials in source or configuration files or transmit them from your development machine in any way.  Best practice is to never set the AWS credentials in code via the aws-sdk client.  Instead utilize the default behavior of AWS sdk clients, credential provider chain which searches for credentials using chain of responsibility pattern searching for environment variables or IAM role (running within AWS data center) and so on.  See http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CredentialProviderChain.html
 
 Bob's your uncle!  You should be able to create a new post from Ghost post editor
 and upload a new image straight to an S3 bucket/folder.
 
 #### Configuration
-
-Add this json to your Ghost config.json file.
 
 ```
 storage: {
@@ -95,6 +93,6 @@ If distributionUrl is not specified then defaults to S3 http url in which case r
 Eg. https://s3-`<region>`.amazonaws.com/`<bucket>`/`<folder>`/`<YYYY>`/`<MM>`/`<DD>`/`<guid>`.`<ext>`
 If both region and distributionUrl are specified distributionUrl takes precedence.
 
-###Feedback
+### Feedback
 Feedback and contributions welcome
 
