@@ -1,6 +1,6 @@
 # Ghost S3 File Storage Plug-in
 
-Ghost v0.11.5+
+Compatible with Ghost ^1.18.2
 
 [![Build Status](https://travis-ci.org/dionhut/ghost-s3-file-store.svg?branch=master)](https://travis-ci.org/dionhut/ghost-s3-file-store)
 
@@ -8,80 +8,52 @@ Once installed allows a ghost user to upload files directly to AWS S3 from
 the Ghost editor without any changes to ghost source.
 This is especially useful when deploying Ghost in AWS directly
 on EC2 instances or Docker Containers where storing 
-files to local disk isn't desirable when multiple instances of
-Ghost are deployed behind a load balancer.
+files to local disk isn't desirable.
 
-### Installation 
+This S3 storage adapter doesn't perform reading or serving the files and requires the specified S3 bucket configured with public read-only policy.  S3 is fit for this purpose of serving SPAs and/or assets via public url endpoint.
 
-#### Install via Docker Volume Container
+### Installation Example 
 
 I like to deploy Ghost in a Docker container using the official [Ghost](https://hub.docker.com/_/ghost/)
-image.  As an added benefit deploying my config.json and
-storage plug-in is really convenient to deploy as a separate linked container
-using `--volumes-from`
+image.
 
-First we need to create our data volume container.  But before we do that let's clone the
-ghost-s3-file-store repo.
-
-Create a new directory for your ghost blog data volume container.
+I created an npm project with a Dockerfile and installed ghost-s3-file-storage as a dependency.  This way when the container is build we can include the index.js and it's node_modules.
 
 ```
-mkdir ghost-blog-data
-cd ghost-blog-data
-
 npm init
+
 npm install --save ghost-s3-file-storage
 ```
 
-Next we can create a Dockerfile that looks a lot like below.
+Example Dockerfile
 
 ```
-FROM node:4-slim
+FROM ghost:1.18.2
 
-ENV GHOST_CONTENT /var/lib/ghost
-WORKDIR "$GHOST_CONTENT"
-
-COPY config.js config.js
-
-WORKDIR "$GHOST_CONTENT/storage/ghost-s3-file-storage"
-ADD node_modules node_modules
-RUN cp node_modules/ghost-s3-file-store/index.js index.js
-
-VOLUME $GHOST_CONTENT
+ADD node_modules/ghost-s3-file-storage/node_modules /var/lib/ghost/content/adapters/storage/ghost-s3-file-storage/node_modules
+ADD node_modules/ghost-s3-file-storage/index.js /var/lib/ghost/content/adapters/storage/ghost-s3-file-storage/index.js
 ```
 
-And make sure you add your config.json file to this directory as well. Now we can build our
-Docker image and create a container.
+Now we can build our Docker image and create a container.
 
 ```
-docker build -t ghost-blog-data .
-
-docker create --name some-ghost-data ghost-blog-data
+docker build --rm -t ghost-blog:latest .
 ```
 
-Now we can test it out and run our Ghost container linked to our newly created
-data volume container.
+Now we can test it out and run our Ghost container with our new s3 storage adapter configured.
 
 ```
-docker pull ghost
-
-docker run --name some-ghost -p 8080:2368
-  -e AWS_ACCESS_KEY_ID=<key>
-  -e AWS_SECRET_ACCESS_KEY=<secret>
-  --volumes-from some-ghost-data ghost
+docker run --rm -p 2368:2368 -e NODE_ENV=development -e database__client=sqlite3
+    -e database__connection__filename=/var/lib/ghost/content/data/ghost-test.db -e storage__active=ghost-s3-file-storage
+    -e storage__ghost-s3-file-storage__region=us-west-2 -e storage__ghost-s3-file-storage__bucket=ghost-blog
+    -e storage__ghost-s3-file-storage__folder=files -e AWS_ACCESS_KEY_ID=<access-key>
+    -e AWS_SECRET_ACCESS_KEY=<secret> ghost-blog:latest
 ```
+
+Note: Never store AWS credentials in source or configuration files or transmit them in any way.  Best practice is to never set the AWS credentials in code via the aws-sdk client.  Instead utilize the default behavior of AWS sdk clients, credential provider chain which searches for credentials using chain of responsibility pattern searching for environment variables or IAM role (within AWS data center) and so on.  See http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CredentialProviderChain.html
 
 Bob's your uncle!  You should be able to create a new post from Ghost post editor
 and upload a new image straight to an S3 bucket/folder.
-
-#### Install directly to $GHOST_SOURCE
-
-Why would you do this when you can use Docker?
-
-Ok.
-
-TODO:  Try this method out.  Or maybe someone would do me a
-favour and try it out.  Would love the feedback.
 
 #### Configuration
 
@@ -100,7 +72,7 @@ storage: {
 ```
 
 ##### active
-Refers to the $GHOST_CONTENT/storage/ghost-s3-file-storage directory where Ghost can find
+Refers to the /var/lib/ghost/content/adapters/storage directory where Ghost can find
 this file storage plug-in.
 
 ##### region

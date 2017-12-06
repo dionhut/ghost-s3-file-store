@@ -4,7 +4,10 @@ var moment = require('moment');
 var path = require('path');
 var fs = require('fs');
 
-// requires running on development environment aws configure via aws-cli to setup accessKey and secret
+// Requires running on development environment
+// Use command: aws configure
+// via aws-cli to setup accessKey and secret
+// Never set credentials in code see http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CredentialProviderChain.html
 
 module.exports = {
     setUp: function (callback) {
@@ -32,8 +35,20 @@ module.exports = {
 
     testS3StoreFile: function (test) {
         var s3FileStorage = new S3Store({region: "us-west-2", bucket: "blog.dionhut.net", folder: "test/"});
-        s3FileStorage.save({path: 'test.jpg'}).then(function (url) {
-            test.equal("https://s3-us-west-2.amazonaws.com/blog.dionhut.net/" + path.join("test", moment().format("YYYY/MM/DD"), "test.jpg"), url);
+        s3FileStorage.save({ fieldname: 'uploadimage',
+        originalname: "IMG_0023.JPG",
+        encoding: '7bit',
+        mimetype: 'image/jpeg',
+        destination: '/tmp',
+        filename: 'test.jpg',
+        path: 'test.jpg',
+        size: 2672476,
+        name: 'IMG_0023.JPG',
+        type: 'image/jpeg',
+        ip: '172.17.0.1',
+        context: { user: '1', client: null, client_id: null }
+    }).then(function (url) {
+            test.equal("https://s3-us-west-2.amazonaws.com/blog.dionhut.net/" + path.join("test", moment().format("YYYY/MM/DD"), "test.JPG"), url);
             test.done();
         }, function (err) {
             console.log(err);
