@@ -30,7 +30,7 @@ Example Dockerfile
 ```
 FROM ghost:1.18.2
 
-ADD node_modules/ghost-s3-file-storage/node_modules /var/lib/ghost/content/adapters/storage/ghost-s3-file-storage/node_modules
+ADD node_modules /var/lib/ghost/content/adapters/storage/ghost-s3-file-storage/node_modules
 ADD node_modules/ghost-s3-file-storage/index.js /var/lib/ghost/content/adapters/storage/ghost-s3-file-storage/index.js
 ```
 
@@ -85,12 +85,12 @@ The root folder to upload files into in the specified bucket
 ##### distributionUrl
 (Optional) The base url to construct when returning url to Ghost if standing up a CloudFront
 CDN in front of the S3 bucket.
-Eg. `<distribution-url>`/`<folder>`/`<YYYY>`/`<MM>`/`<DD>`/`<guid>`.`<ext>`
+Eg. `<distribution-url>/<folder>/<YYYY>/<MM>/<DD>/<guid>.<ext>`
 See [here](http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/MigrateS3ToCloudFront.html#adding-cloudfront-to-s3)
 for details on how to set up CloudFront to cache files out on the edges.
 
 If distributionUrl is not specified then defaults to S3 http url in which case region must be specified.
-Eg. https://s3-`<region>`.amazonaws.com/`<bucket>`/`<folder>`/`<YYYY>`/`<MM>`/`<DD>`/`<guid>`.`<ext>`
+Eg. `https://s3-<region>.amazonaws.com/<bucket>/<folder>/<YYYY>/<MM>/<DD>/<guid>.<ext>`
 If both region and distributionUrl are specified distributionUrl takes precedence.
 
 ### Feedback
